@@ -26,4 +26,7 @@ for pokemon in pokemon_list:
         print(f"Saved data to {file_path} ✅")
 
     except requests.exceptions.RequestException as e:
-        print(f"Failed t
+        print(f"Failed to fetch data for {pokemon}: {e}")
+
+    # Delay to avoid hitting API rate limits
+    time.sleep(1)
