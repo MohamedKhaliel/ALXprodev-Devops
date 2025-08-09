@@ -1,18 +1,40 @@
 #!/bin/bash
+# batchProcessing-0x04
+# Parallel fetching of Pokémon data
 
 POKEMONS=("Bulbasaur" "Ivysaur" "Venusaur" "Charmander" "Charmeleon")
+API_BASE="https://pokeapi.co/api/v2/pokemon"
 
-# Trap to kill all background processes if script exits
-trap "echo 'Cleaning up...'; kill 0" EXIT
+mkdir -p pokemon_data
 
+fetch_pokemon() {
+    local name="$1"
+    local file="pokemon_data/${name,,}.json"  # lowercase name for file
+    local retries=3
+    local count=0
+    local success=false
+
+    while [[ $count -lt $retries ]]; do
+        if curl -s -f "$API_BASE/${name,,}" -o "$file"; then
+            echo "✅ Fetched: $name"
+            success=true
+            break
+        else
+            ((count++))
+            echo "⚠️ Failed to fetch $name (attempt $count)"
+            sleep 1
+        fi
+    done
+
+    if [[ $success == false ]]; then
+        echo "❌ Skipping $name after $retries kill failed attempts."
+    fi
+}
+
+# Fetch all Pokémon in parallel
 for pokemon in "${POKEMONS[@]}"; do
-    (
-        echo "Fetching data for $pokemon..."
-        curl -s "https://pokeapi.co/api/v2/pokemon/${pokemon,,}" -o "${pokemon,,}.json" \
-        || echo "Failed to fetch data for $pokemon"
-    ) &
+    fetch_pokemon "$pokemon" &
 done
 
-# Wait for all background processes to finish
-wait
-echo "All downloads complete."
+wait  # Wait for all background jobs to finish
+echo "✅ All fetch operations completed."
