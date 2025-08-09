@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # List of Pokémon to fetch
-POKEMONS=("Bulbasaur" "Ivysaur" "Venusaur" "Charmander" "Charmeleon")
+Pokémon=("Bulbasaur" "Ivysaur" "Venusaur" "Charmander" "Charmeleon")
 
 # API endpoint
 API_URL="https://pokeapi.co/api/v2/pokemon"
 
 # Loop through each Pokémon
-for POKEMON in "${POKEMONS[@]}"; do
+for Pokémon in "${POKEMONS[@]}"; do
     FILE_NAME=$(echo "$POKEMON" | tr '[:upper:]' '[:lower:]').json
 
     echo "Fetching data for $POKEMON..."
