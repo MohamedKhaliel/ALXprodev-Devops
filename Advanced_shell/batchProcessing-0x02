@@ -30,3 +30,18 @@ for pokemon in pokemon_list:
 
     # Delay to avoid hitting API rate limits
     time.sleep(1)
+
+#!/bin/bash
+
+# List of Pokémon
+
+
+# Loop through each Pokémon
+for pokemon in "${pokemons[@]}"
+do
+    # Convert name to lowercase for file naming
+    lower_name=$(echo "$pokemon" | tr '[:upper:]' '[:lower:]')
+
+    # Fetch data from PokéAPI and save to file
+    curl -s "https://pokeapi.co/api/v2/pokemon/$lower_name" -o "${lower_name}.json"
+done
